@@ -8,6 +8,10 @@ public class Orange extends Item {
         super("orange", "orng");
     }
 
+    public Orange(int quantity, float price) {
+        super(quantity, price);
+    }
+
     public String getType() {
         return type;
     }

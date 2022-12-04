@@ -10,6 +10,9 @@ import cart.Orange;
 
 public class ShoppingCartClass {
 
+    // TO DO: add and subtract existing quantity of the same item to the cart
+    // Catch error when the input formatting is wrong
+
     public static void main(String[] args) {
 
     Console cons = System.console();
@@ -17,65 +20,70 @@ public class ShoppingCartClass {
 
     boolean isQuit = false;
 
+    float checkOutSum = 0f;
+
     System.out.println("");
 
     System.out.println("Welcome to your shopping cart");
 
     while(!isQuit) {
 
-        String item = cons.readLine("> ").trim().toLowerCase().replaceAll(",", "");
-            String[] splitString = item.split(" ");
+        String item = cons.readLine("> ").trim().toLowerCase();
+        String[] splitString = item.split(" ");
 
         if(splitString.length == 1 && !splitString[0].equals("list") && !splitString[0].equals("quit")) {
-            System.out.println("Please enter an object ");
+            System.err.println("Please enter an object ");
         }
 
         switch(splitString[0]) {
             case "add":
-            for(int i = 1; i < splitString.length; i++)
-            {
+            try {
+                int quantity = Integer.parseInt(splitString[2]);
+                float price = Float.valueOf(splitString[3]);
                 boolean isExists = false;
 
                 for(int j = 0; j < shoppingList.size(); j++) {
 
                     String stringName = (shoppingList.get(j)).getName();
 
-                    if(stringName.equals(splitString[i])) {
+                    if(stringName.equals(splitString[1])) {
 
-                        System.out.printf("You have %s in your cart\n", splitString[i]);
+                        System.out.printf("You have %s in your cart\n", splitString[1]);
                         isExists = true;
 
                     }
 
 
                 }
+
+                if(!isExists) {
+
+                    if(splitString[1] == "apple") {
+                        Item apple = new Apple(quantity, price);
+                        shoppingList.add(apple);
+                    }
+    
+                    else if(splitString[1] == "orange") {
+                        Item orange = new Orange(quantity, price);
+                        shoppingList.add(orange);
+                    }
+    
+                    else {
+    
+                        Item other = new Item(quantity, price, splitString[1], splitString[1]);
+                        shoppingList.add(other);
+
+                    }
+                    System.out.printf("%d x %s added to cart at $%.2f\n", quantity, splitString[1], price);
+                    isExists = false;
+                    checkOutSum += quantity * price;
+
+                }
+
+            } catch (ArrayIndexOutOfBoundsException e) {
                 
-                if(splitString[i] == "apple" && !isExists) {
-                    Item apple = new Apple();
-                    shoppingList.add(apple);
-                    System.out.printf("%s added to cart\n", splitString[i]);
-                    isExists = false;
-                }
-
-                else if(splitString[i] == "orange" && !isExists) {
-                    Item orange = new Orange();
-                    shoppingList.add(orange);
-                    System.out.printf("%s added to cart\n", splitString[i]);
-                    isExists = false;
-
-                }
-
-                else if(!isExists) {
-
-                    Item other = new Item(splitString[i], splitString[i]);
-                    shoppingList.add(other);
-                    System.out.printf("%s added to cart\n", splitString[i]);
-                    isExists = false;
-
-                }
-
-
             }
+            
 
                 break;
 
@@ -96,10 +104,11 @@ public class ShoppingCartClass {
             }
                 break;
 
-            case "quit":
+            case "checkout":
                 isQuit = true;
-                System.out.println("Shopping cart exited");
+                System.out.println("Checking out...");
                 System.out.println("Printing contents of the shopping cart: ");
+                System.out.printf("The total price of %d items is $%.2f. \n", shoppingList.size(), checkOutSum);
 
             case "list":
                 if(shoppingList.size() == 0) {
@@ -109,12 +118,13 @@ public class ShoppingCartClass {
                 else{
                     for(int i = 0; i < shoppingList.size(); i++) {
                         String getItemName = shoppingList.get(i).getName();
+                        int getQuantity = shoppingList.get(i).getQuantity();
+                        float getPrice = shoppingList.get(i).getPrice();
 
-                        System.out.printf("%d. %s\n", i + 1, getItemName);
+                        System.out.printf("%d. %s: %d x $%.2f -> $%.2f\n", i + 1, getItemName, getQuantity, getPrice, (getPrice * getQuantity));
                     }
                 }
                 break;
-
 
             default:
                 break;

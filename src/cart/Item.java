@@ -16,6 +16,19 @@ public class Item {
         this.code = code;
     }
 
+    public Item(int quantity, float price) {
+        this.quantity = quantity;
+        this.price = price;
+
+    }
+
+    public Item(int quantity, float price, String name, String code) {
+        this.quantity = quantity;
+        this.price = price;
+        this.name = name;
+        this.code = code;
+    }
+
     // Getters and Setters
     public String getName() {
         return name;

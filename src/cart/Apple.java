@@ -8,6 +8,11 @@ public class Apple extends Item {
         super("apple", "appl");
     }
 
+    public Apple(int quantity, float price) {
+        super(quantity, price, "apple", "appl");
+    
+    }
+
     public String getType() {
         return type;
     }
